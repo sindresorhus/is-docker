@@ -1,25 +1,22 @@
-'use strict';
-var fs = require('fs');
-var path = require('path');
-var test = require('ava');
-var sinon = require('sinon');
+import fs from 'fs';
+import path from 'path';
+import test from 'ava';
+import sinon from 'sinon';
 
-test('inside a Docker container', function (t) {
+test('inside a Docker container', t => {
 	delete require.cache[path.join(__dirname, 'index.js')];
-	var isDocker = require('./');
+	const isDocker = require('./');
 	fs.statSync = sinon.stub(fs, 'statSync');
 	fs.statSync.withArgs('/.dockerinit').returns({});
-	t.assert(isDocker());
+	t.true(isDocker());
 	fs.statSync.restore();
-	t.end();
 });
 
-test('not inside a Docker container', function (t) {
+test('not inside a Docker container', t => {
 	delete require.cache[path.join(__dirname, 'index.js')];
-	var isDocker = require('./');
+	const isDocker = require('./');
 	fs.statSync = sinon.stub(fs, 'statSync');
 	fs.statSync.withArgs('/.dockerinit').throws('ENOENT, no such file or directory \'/.dockerinit\'');
-	t.assert(!isDocker());
+	t.true(!isDocker());
 	fs.statSync.restore();
-	t.end();
 });
