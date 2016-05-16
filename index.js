@@ -5,6 +5,7 @@ var isDocker;
 function check() {
 	try {
 		fs.statSync('/.dockerinit');
+    fs.statSync('/.dockerenv');
 		return true;
 	} catch (err) {
 		return false;
