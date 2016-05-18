@@ -13,24 +13,25 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "ava"
+    "test": "xo && ava"
   },
   "files": [
     "index.js"
   ],
   "keywords": [
+    "detect",
     "docker",
     "dockerized",
     "container",
     "inside",
     "is",
-    "detect",
     "env",
     "environment",
     "process"
   ],
   "devDependencies": {
     "ava": "*",
-    "sinon": "^1.14.1"
+    "sinon": "^1.14.1",
+    "xo": "*"
   }
 }

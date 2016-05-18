@@ -13,7 +13,7 @@ $ npm install --save is-docker
 ## Usage
 
 ```js
-var isDocker = require('is-docker');
+const isDocker = require('is-docker');
 
 if (isDocker()) {
 	console.log('Running inside a Docker container');
@@ -23,4 +23,4 @@ if (isDocker()) {
 
 ## License
 
-MIT © [Sindre Sorhus](http://sindresorhus.com)
+MIT © [Sindre Sorhus](https://sindresorhus.com)

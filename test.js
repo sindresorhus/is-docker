@@ -17,6 +17,6 @@ test('not inside a Docker container', t => {
 	const isDocker = require('./');
 	fs.statSync = sinon.stub(fs, 'statSync');
 	fs.statSync.withArgs('/.dockerinit').throws('ENOENT, no such file or directory \'/.dockerinit\'');
-	t.true(!isDocker());
+	t.false(isDocker());
 	fs.statSync.restore();
 });
