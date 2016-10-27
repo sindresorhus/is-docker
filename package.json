@@ -32,6 +32,6 @@
   "devDependencies": {
     "ava": "*",
     "sinon": "^1.14.1",
-    "xo": "*"
+    "xo": "^0.16.0"
   }
 }
