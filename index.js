@@ -14,21 +14,15 @@ function hasDockerEnv() {
 
 function hasDockerCGroup() {
 	try {
-		return (
-			fs.readFileSync('/proc/self/cgroup', 'utf8').indexOf('docker') !== -1
-		);
+		return fs.readFileSync('/proc/self/cgroup', 'utf8').includes('docker');
 	} catch (_) {
 		return false;
 	}
 }
 
-function check() {
-	return hasDockerEnv() || hasDockerCGroup();
-}
-
 module.exports = () => {
 	if (isDocker === undefined) {
-		isDocker = check();
+		isDocker = hasDockerEnv() || hasDockerCGroup();
 	}
 
 	return isDocker;
