@@ -5,7 +5,7 @@ import sinon from 'sinon';
 
 test('inside a Docker container (.dockerenv test)', t => {
 	delete require.cache[path.join(__dirname, 'index.js')];
-	const isDocker = require('./');
+	const isDocker = require('.');
 
 	fs.statSync = sinon.stub(fs, 'statSync');
 	fs.statSync.withArgs('/.dockerenv').returns({});
@@ -15,7 +15,7 @@ test('inside a Docker container (.dockerenv test)', t => {
 
 test('inside a Docker container (cgroup test)', t => {
 	delete require.cache[path.join(__dirname, 'index.js')];
-	const isDocker = require('./');
+	const isDocker = require('.');
 
 	fs.statSync = sinon.stub(fs, 'statSync');
 	fs.statSync.withArgs('/.dockerenv').throws('ENOENT, no such file or directory \'/.dockerinit\'');
@@ -31,7 +31,7 @@ test('inside a Docker container (cgroup test)', t => {
 
 test('not inside a Docker container', t => {
 	delete require.cache[path.join(__dirname, 'index.js')];
-	const isDocker = require('./');
+	const isDocker = require('.');
 
 	fs.statSync = sinon.stub(fs, 'statSync');
 	fs.statSync.withArgs('/.dockerenv').throws('ENOENT, no such file or directory \'/.dockerinit\'');
