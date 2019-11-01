@@ -15,7 +15,11 @@
 	"scripts": {
 		"test": "xo && ava && tsd"
 	},
+	"bin": {
+		"is-docker": "./cli.js"
+	},
 	"files": [
+		"cli.js",
 		"index.js",
 		"index.d.ts"
 	],
