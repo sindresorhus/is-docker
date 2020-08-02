@@ -9,14 +9,12 @@
 		"email": "sindresorhus@gmail.com",
 		"url": "sindresorhus.com"
 	},
+	"bin": "cli.js",
 	"engines": {
 		"node": ">=8"
 	},
 	"scripts": {
 		"test": "xo && ava && tsd"
-	},
-	"bin": {
-		"is-docker": "./cli.js"
 	},
 	"files": [
 		"cli.js",
