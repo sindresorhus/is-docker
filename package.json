@@ -9,6 +9,7 @@
 		"email": "sindresorhus@gmail.com",
 		"url": "sindresorhus.com"
 	},
+	"bin": "cli.js",
 	"engines": {
 		"node": ">=8"
 	},
@@ -17,7 +18,8 @@
 	},
 	"files": [
 		"index.js",
-		"index.d.ts"
+		"index.d.ts",
+		"cli.js"
 	],
 	"keywords": [
 		"detect",
