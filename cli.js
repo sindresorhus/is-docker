@@ -1,9 +1,5 @@
 #!/usr/bin/env node
-
 'use strict';
+const isDocker = require('.');
 
-const api = require('.');
-
-if (!api()) {
-	process.exit(1);
-}
+process.exitCode = isDocker ? 0 : 2:
