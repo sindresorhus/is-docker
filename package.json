@@ -17,9 +17,9 @@
 		"test": "xo && ava && tsd"
 	},
 	"files": [
-		"cli.js",
 		"index.js",
-		"index.d.ts"
+		"index.d.ts",
+		"cli.js"
 	],
 	"keywords": [
 		"detect",
