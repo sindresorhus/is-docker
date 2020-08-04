@@ -2,4 +2,4 @@
 'use strict';
 const isDocker = require('.');
 
-process.exitCode = isDocker ? 0 : 2;
+process.exitCode = isDocker() ? 0 : 2;
