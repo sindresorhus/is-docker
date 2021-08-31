@@ -1,4 +1,4 @@
 import {expectType} from 'tsd';
-import isDocker = require('.');
+import isDocker from './index.js';
 
 expectType<boolean>(isDocker());
