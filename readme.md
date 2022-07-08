@@ -4,8 +4,8 @@
 
 ## Install
 
-```
-$ npm install is-docker
+```sh
+npm install is-docker
 ```
 
 ## Usage
@@ -20,8 +20,12 @@ if (isDocker()) {
 
 ## CLI
 
-```
-$ is-docker
+```sh
+is-docker
 ```
 
 Exits with code 0 if inside a Docker container and 2 if not.
+
+## Related
+
+- [is-inside-container](https://github.com/sindresorhus/is-inside-container) - Check if the process is running inside a container
