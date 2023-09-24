@@ -11,6 +11,15 @@ function hasDockerEnv() {
 	}
 }
 
+function hasContainerEnv() {
+	try {
+		fs.statSync('/run/.containerenv');
+		return true;
+	} catch {
+		return false;
+	}
+}
+
 function hasDockerCGroup() {
 	try {
 		return fs.readFileSync('/proc/self/cgroup', 'utf8').includes('docker');
@@ -22,7 +31,7 @@ function hasDockerCGroup() {
 export default function isDocker() {
 	// TODO: Use `??=` when targeting Node.js 16.
 	if (isDockerCached === undefined) {
-		isDockerCached = hasDockerEnv() || hasDockerCGroup();
+		isDockerCached = hasDockerEnv() || hasContainerEnv() || hasDockerCGroup();
 	}
 
 	return isDockerCached;
