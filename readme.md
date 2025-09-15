@@ -21,10 +21,14 @@ if (isDocker()) {
 ## CLI
 
 ```sh
-is-docker
+$ is-docker
 ```
 
 Exits with code 0 if inside a Docker container and 2 if not.
+
+```sh
+$ is-docker && echo "Running in Docker" || echo "Not running in Docker"
+```
 
 ## Related
 

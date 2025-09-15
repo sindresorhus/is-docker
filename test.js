@@ -1,47 +1,110 @@
-/* eslint-disable unicorn/prefer-module, ava/no-skip-test */
-import fs from 'node:fs';
-import path from 'node:path';
 import test from 'ava';
-import sinon from 'sinon';
+import esmock from 'esmock';
 
-const require = {};
+test('detects Docker via /.dockerenv', async t => {
+	const isDocker = await esmock('./index.js', {
+		'node:fs': {
+			statSync(path) {
+				if (path === '/.dockerenv') {
+					return {};
+				}
 
-// TODO: Enable tests again when ESM supports loader hooks.
+				throw new Error('ENOENT');
+			},
+			readFileSync() {
+				throw new Error('ENOENT');
+			},
+		},
+	});
 
-test.skip('inside a Docker container (.dockerenv test)', t => {
-	delete require.cache[path.join(__dirname, 'index.js')];
-	const isDocker = require('.');
-
-	fs.statSync = sinon.stub(fs, 'statSync');
-	fs.statSync.withArgs('/.dockerenv').returns({});
-	t.true(isDocker());
-	fs.statSync.restore();
+	t.true(isDocker.default());
 });
 
-test.skip('inside a Docker container (cgroup test)', t => {
-	delete require.cache[path.join(__dirname, 'index.js')];
-	const isDocker = require('.');
+test('detects Docker via /proc/self/cgroup', async t => {
+	const isDocker = await esmock('./index.js', {
+		'node:fs': {
+			statSync() {
+				throw new Error('ENOENT');
+			},
+			readFileSync(path) {
+				if (path === '/proc/self/cgroup') {
+					return 'xxx docker yyyy';
+				}
 
-	fs.statSync = sinon.stub(fs, 'statSync');
-	fs.statSync.withArgs('/.dockerenv').throws('ENOENT, no such file or directory \'/.dockerinit\'');
+				throw new Error('ENOENT');
+			},
+		},
+	});
 
-	fs.readFileSync = sinon.stub(fs, 'readFileSync');
-	fs.readFileSync.withArgs('/proc/self/cgroup', 'utf8').returns('xxx docker yyyy');
-
-	t.true(isDocker());
-
-	fs.readFileSync.restore();
-	fs.statSync.restore();
+	t.true(isDocker.default());
 });
 
-test.skip('not inside a Docker container', t => {
-	delete require.cache[path.join(__dirname, 'index.js')];
-	const isDocker = require('.');
+test('detects Docker via /proc/self/mountinfo', async t => {
+	const isDocker = await esmock('./index.js', {
+		'node:fs': {
+			statSync() {
+				throw new Error('ENOENT');
+			},
+			readFileSync(path) {
+				if (path === '/proc/self/mountinfo') {
+					return '1234 24 0:6 /docker/containers/abc123/hostname /etc/hostname rw,nosuid';
+				}
 
-	fs.statSync = sinon.stub(fs, 'statSync');
-	fs.statSync.withArgs('/.dockerenv').throws('ENOENT, no such file or directory \'/.dockerinit\'');
+				if (path === '/proc/self/cgroup') {
+					return '0::/'; // Cgroups v2 format
+				}
 
-	t.false(isDocker());
+				throw new Error('ENOENT');
+			},
+		},
+	});
 
-	fs.statSync.restore();
+	t.true(isDocker.default());
+});
+
+test('not inside Docker container', async t => {
+	const isDocker = await esmock('./index.js', {
+		'node:fs': {
+			statSync() {
+				throw new Error('ENOENT');
+			},
+			readFileSync() {
+				throw new Error('ENOENT');
+			},
+		},
+	});
+
+	t.false(isDocker.default());
+});
+
+test('caching works correctly', async t => {
+	let statSyncCallCount = 0;
+	let readFileSyncCallCount = 0;
+
+	const isDocker = await esmock('./index.js', {
+		'node:fs': {
+			statSync() {
+				statSyncCallCount++;
+				throw new Error('ENOENT');
+			},
+			readFileSync(path) {
+				readFileSyncCallCount++;
+				if (path === '/proc/self/cgroup') {
+					return 'xxx docker yyyy';
+				}
+
+				throw new Error('ENOENT');
+			},
+		},
+	});
+
+	// First call
+	t.true(isDocker.default());
+	t.is(statSyncCallCount, 1);
+	t.is(readFileSyncCallCount, 1);
+
+	// Second call - should use cache
+	t.true(isDocker.default());
+	t.is(statSyncCallCount, 1); // Should not increase
+	t.is(readFileSyncCallCount, 1); // Should not increase
 });
