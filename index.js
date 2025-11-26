@@ -21,7 +21,8 @@ function hasDockerCGroup() {
 
 function hasDockerMountInfo() {
 	try {
-		return fs.readFileSync('/proc/self/mountinfo', 'utf8').includes('/docker/containers/');
+		const mountinfo = fs.readFileSync('/proc/self/mountinfo', 'utf8');
+		return mountinfo.includes('/docker/containers/') || mountinfo.includes('/docker/buildkit/');
 	} catch {
 		return false;
 	}
